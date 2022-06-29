@@ -8,14 +8,27 @@ const store = createStore({
     user: {},
     authenticated: false,
     fakeData: '',
+    site_url: url,
   },
   getters: {
     isLoggedIn: (state) => {
       return state.authenticated
     },
+    isAdmin: (state) => {
+      if (state.user.role === 'admin') {
+        return true
+      }
+    },
     userName: (state) => {
-      if (state.user.name) {
+      if (state.user) {
         return state.user.name
+      } else {
+        return ''
+      }
+    },
+    userImage: (state) => {
+      if (state.user) {
+        return state.user.image
       } else {
         return ''
       }
@@ -113,7 +126,6 @@ const store = createStore({
         .get(`${url}/api/auth/logout`, { withCredentials: true })
         .then((res) => {
           commit('destroyUserData')
-          console.log(res)
           return { status: res.status, message: res.data.message }
         })
         .catch((err) => {

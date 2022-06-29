@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-full">
-    <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
+    <Disclosure as="nav" class="bg-white" v-slot="{ open }">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <div class="flex items-center">
@@ -18,9 +18,9 @@
                   :key="item.name"
                   :to="item.to"
                   :class="[
-                    item.current
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                    $route.name === item.to.name
+                      ? 'bg-[#6C63FF] text-white'
+                      : 'text-[#333] hover:bg-[#6C63FF] hover:text-white',
                     'px-3 py-2 rounded-md text-sm font-medium',
                   ]"
                   :aria-current="item.current ? 'page' : undefined"
@@ -33,7 +33,7 @@
             <div class="ml-4 flex items-center md:ml-6">
               <button
                 type="button"
-                class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                class="bg-[#6C63FF] p-1 rounded-full text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#6C63FF] focus:ring-white"
               >
                 <span class="sr-only">View notifications</span>
                 <BellIcon class="h-6 w-6" aria-hidden="true" />
@@ -177,12 +177,12 @@ import store from '../store'
 const user = {
   name: 'Tom Cook',
   email: 'tom@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  imageUrl: store.state.site_url + store.getters.userImage,
 }
 const navigation = [
-  { name: 'Dashboard', to: '#', current: true },
-  { name: 'Calendar', to: '#', current: false },
+  { name: 'Dashboard', to: { name: 'Dashboard' }, current: false },
+  { name: 'Users', to: { name: 'Users' }, current: false },
+  { name: 'Hotels', to: { name: 'Hotels' }, current: false },
   { name: 'View Site', to: { name: 'Home' }, current: false },
 ]
 const userNavigation = [

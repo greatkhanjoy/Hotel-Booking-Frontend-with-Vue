@@ -1,6 +1,6 @@
 <template>
   <main
-    class="bg-[url('../../public/filter.svg')] p-10 bg-right bg-no-repeat relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20"
+    class="bg-[url('/filter.svg')] p-10 bg-right bg-no-repeat relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20"
   >
     <div class="sm:text-center lg:text-left">
       <h1

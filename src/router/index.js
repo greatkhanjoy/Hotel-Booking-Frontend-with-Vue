@@ -6,9 +6,11 @@ import store from '../store'
 import Dashboard from '../views/Dashboard.vue'
 import ForgotPassword from '../views/ForgotPassword.vue'
 import Home from '../views/Home.vue'
+import Hotels from '../views/Hotels.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import ResetPassword from '../views/ResetPassword.vue'
+import Users from '../views/Users.vue'
 import Verify from '../views/Verify.vue'
 const routes = [
   {
@@ -30,7 +32,16 @@ const routes = [
     name: 'Dashboard',
     component: DefaltLayout,
     meta: { requiresAuth: true },
-    children: [{ path: '/dashboard', name: 'Dashboard', component: Dashboard }],
+    children: [
+      { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+      { path: '/dashboard/hotels', name: 'Hotels', component: Hotels },
+      {
+        path: '/dashboard/users',
+        name: 'Users',
+        component: Users,
+        meta: { requiresAdmin: true },
+      },
+    ],
   },
   {
     path: '/auth',
@@ -89,6 +100,12 @@ router.beforeEach((to, from, next) => {
     .then(() => {
       if (to.meta.requiresAuth && !authenticated) {
         next({ name: 'Login' })
+      } else if (
+        authenticated &&
+        to.meta.requiresAdmin &&
+        !store.getters.isAdmin
+      ) {
+        next({ name: 'Dashboard' })
       } else if (authenticated && to.meta.isGuest) {
         next({ name: 'Dashboard' })
       } else {
