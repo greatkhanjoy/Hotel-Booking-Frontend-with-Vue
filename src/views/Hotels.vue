@@ -51,10 +51,11 @@
                 <td class="px-6 py-4">{{ hotel.cheapestPrice }}</td>
                 <td class="px-6 py-4">{{ hotel.rating }}</td>
                 <td class="px-6 py-4">
-                  <img
-                    class="h-10 w-10"
+                  <Image
                     :src="$store.state.site_url + hotel.featuredImage"
-                    alt=""
+                    alt="Image"
+                    width="50"
+                    preview
                   />
                 </td>
                 <td class="px-6 py-4 text-right space-x-4">
@@ -77,11 +78,13 @@ import {
   PencilIcon,
 } from '@heroicons/vue/solid'
 import axios from 'axios'
+import Image from 'primevue/image'
 import Button from '../components/elements/Button.vue'
 import Heading from '../components/Heading.vue'
 export default {
   name: 'Hotels',
   components: {
+    Image,
     Button,
     Heading,
     CheckIcon,
