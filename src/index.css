@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.p-button-icon-only.p-datepicker-trigger {
+  background: #fff;
+  color: #333;
+  border: none;
+}
+
+.primary-btn {
+  background: #0d89ec;
+}
+#checkin {
+  border: #fff;
+}
+#priceSlider {
+  background-color: #fff;
+}

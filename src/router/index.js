@@ -5,6 +5,7 @@ import DefaltLayout from '../components/DefaultLayout.vue'
 import store from '../store'
 import Dashboard from '../views/Dashboard.vue'
 import ForgotPassword from '../views/ForgotPassword.vue'
+import FHotels from '../views/front/Hotels.vue'
 import Home from '../views/Home.vue'
 import Hotels from '../views/Hotels.vue'
 import Login from '../views/Login.vue'
@@ -23,6 +24,11 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home,
+      },
+      {
+        path: '/hotels',
+        name: 'FHotels',
+        component: FHotels,
       },
     ],
   },
