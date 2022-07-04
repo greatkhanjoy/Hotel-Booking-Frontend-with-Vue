@@ -9,6 +9,9 @@ const store = createStore({
     authenticated: false,
     fakeData: '',
     site_url: url,
+    selectedDates: null,
+    days: null,
+    displaySignInModal: false,
   },
   getters: {
     isLoggedIn: (state) => {
@@ -154,6 +157,16 @@ const store = createStore({
     },
   },
   mutations: {
+    setdisplaySignInModal(state, payload) {
+      state.displaySignInModal = payload
+    },
+    setDates(state, dates) {
+      const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24
+      const timeDiff = Math.abs(dates[1].getTime() - dates[0].getTime())
+      const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY)
+      state.days = diffDays
+      state.selectedDates = dates
+    },
     destroyUserData(state) {
       state.user = null
       state.authenticated = false

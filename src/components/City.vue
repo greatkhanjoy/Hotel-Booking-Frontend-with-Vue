@@ -1,17 +1,17 @@
 <template>
   <div class="bg-white">
     <div
-      class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8"
+      class="sm:mt-[150px] max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8"
     >
       <h2 class="sr-only">Explore Bangladesh</h2>
       <h2 class="text-3xl py-5">Explore Bangladesh</h2>
       <div
         class="grid grid-cols-4 gap-y-5 sm:grid-cols-3 gap-x-3 lg:grid-cols-6 xl:grid-cols-4 xl:gap-x-8"
       >
-        <a
+        <router-link
           v-for="city in cities"
           :key="city.id"
-          :href="'/hotels?city=' + city.name"
+          :to="'/hotels?city=' + city.name"
           class="group"
         >
           <div
@@ -29,7 +29,7 @@
           <p class="mt-1 text-lg font-medium text-gray-900">
             {{ city.count }}
           </p>
-        </a>
+        </router-link>
       </div>
     </div>
   </div>
@@ -49,7 +49,6 @@ const cities = [
   {
     id: 2,
     name: 'Sylhet',
-    href: '#',
     count: '15',
     imageSrc:
       'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg',
@@ -58,7 +57,6 @@ const cities = [
   {
     id: 3,
     name: 'Rajshahi',
-    href: '#',
     count: '20',
     imageSrc:
       'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg',
@@ -67,7 +65,6 @@ const cities = [
   {
     id: 4,
     name: 'Dhaka',
-    href: '#',
     count: '25',
     imageSrc:
       'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg',
@@ -76,7 +73,6 @@ const cities = [
   {
     id: 5,
     name: 'Chittagong',
-    href: '#',
     count: '30',
     imageSrc:
       'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-05.jpg',
@@ -85,7 +81,6 @@ const cities = [
   {
     id: 6,
     name: 'Khulna',
-    href: '#',
     count: '35',
     imageSrc:
       'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-06.jpg',

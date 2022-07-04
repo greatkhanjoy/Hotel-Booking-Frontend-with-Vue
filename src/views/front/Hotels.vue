@@ -17,6 +17,8 @@
               />
               <h5>Check-in & Check-out date:</h5>
               <Calendar
+                ref="dateSelect"
+                @dateSelect="onSelectDate"
                 id="checkin"
                 v-model="dates"
                 selectionMode="range"
@@ -57,7 +59,7 @@
         </h4>
         <!-- Item Container  -->
         <div class="item-conatiner py-1 space-y-5">
-          <template v-for="hotel in hotels.items" key="hotel._id">
+          <template v-for="hotel in hotels.items" :key="hotel._id">
             <!-- Single Item  -->
             <div
               class="single-item flex justify-between space-x-2 border-[#0D89EC] border-[1px] p-4"
@@ -70,7 +72,10 @@
               <div class="px-2">
                 <div class="space-x-2 flex items-center">
                   <h2 class="text-xl font-bold text-blue-800">
-                    {{ hotel.name }}
+                    <router-link
+                      :to="{ name: 'FSingleHotel', params: { id: hotel._id } }"
+                      >{{ hotel.name }}</router-link
+                    >
                   </h2>
                   <span class="flex space-x-1">
                     <i class="pi pi-star-fill text-orange-400"></i>
@@ -99,9 +104,14 @@
                   >
                 </div>
                 <Button
-                  label="show prices"
-                  class="primary-btn text-base px-3"
+                  @click="getPrice()"
+                  label="show price"
+                  class="primary-btn text-base px-3 w-40"
                 />
+                <div v-if="showPrice">
+                  <p class="text-center text-xl">${{ hotel.cheapestPrice }}</p>
+                  <p class="text-center text-xs">lowest price per night.</p>
+                </div>
               </div>
             </div>
             <!-- Single Item  -->
@@ -134,10 +144,11 @@ export default {
   },
   data() {
     return {
+      showPrice: false,
       hotels: [],
       destination: null,
       minAndMax: [50, 120],
-      dates: null,
+      dates: this.$store.state.selectedDates,
       cities: [
         { name: 'New York', code: 'NY' },
         { name: 'Rome', code: 'RM' },
@@ -148,6 +159,24 @@ export default {
     }
   },
   methods: {
+    onSelectDate() {
+      const calendar = this.$refs.dateSelect ?? null
+      if (
+        calendar &&
+        Array.isArray(calendar.modelValue) &&
+        calendar.modelValue.length >= 2
+      ) {
+        store.commit('setDates', this.dates)
+        calendar.overlayVisible = false
+      }
+    },
+    getPrice() {
+      if (this.dates) {
+        this.showPrice = !this.showPrice
+      } else {
+        document.getElementById('checkin').focus()
+      }
+    },
     search() {
       if (this.destination || this.minAndMax) {
         let minprice = this.minAndMax[0]
@@ -177,18 +206,14 @@ export default {
         })
     },
     getSearchResults() {
-      let query = ''
-      if (this.$route.query.city) {
-        query += '&city=' + this.$route.query.city
-      }
-      if (this.$route.query.checkin) {
-        query += '&checkin=' + this.$route.query.checkin
-      }
-      if (this.$route.query.checkout) {
-        query += '&checkout=' + this.$route.query.checkout
-      }
       axios
-        .get(store.state.site_url + '/api/hotels/search?' + query)
+        .get(
+          `${store.state.site_url}/api/hotels/search?${
+            this.$route.query.city ? 'city=' + this.$route.query.city : ''
+          }&minprice=${this.$route.query.minprice || 0}&maxprice=${
+            this.$route.query.maxprice || 10000
+          }`
+        )
         .then((response) => {
           this.hotels = response.data
         })
@@ -198,7 +223,11 @@ export default {
     },
   },
   created() {
-    if (this.$route.query.city) {
+    if (
+      this.$route.query.city ||
+      this.$route.query.minprice ||
+      this.$route.query.maxprice
+    ) {
       this.getSearchResults()
     } else {
       this.getHotels()

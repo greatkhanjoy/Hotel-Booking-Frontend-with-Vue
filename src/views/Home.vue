@@ -16,6 +16,21 @@
           />
         </div>
         <div class="flex-col space-y-1">
+          <h5 class="">Check-in and Check-out Dates:</h5>
+          <Calendar
+            ref="dateSelect"
+            @dateSelect="onSelectDate"
+            id="checkin"
+            v-model="selectedDates"
+            selectionMode="range"
+            :manualInput="false"
+            placeholder="Check-in and Check-out date"
+            class="w-full border-white"
+            :showIcon="true"
+          />
+        </div>
+
+        <!-- <div class="flex-col space-y-1">
           <h5 class="">Check-in Date:</h5>
           <input
             ref="checkin"
@@ -34,7 +49,7 @@
             v-model="checkOutDate"
             class="border-0"
           />
-        </div>
+        </div> -->
 
         <button
           type="submit"
@@ -69,28 +84,33 @@ export default {
   },
   data() {
     return {
+      selectedDates: null,
       destination: null,
       checkOutDate: null,
       checkInDate: null,
-      invalidDates: null,
-      cities: [
-        { name: 'New York', code: 'NY' },
-        { name: 'Rome', code: 'RM' },
-        { name: 'London', code: 'LDN' },
-        { name: 'Istanbul', code: 'IST' },
-        { name: 'Paris', code: 'PRS' },
-      ],
     }
   },
   methods: {
+    onSelectDate() {
+      const calendar = this.$refs.dateSelect ?? null
+      if (
+        calendar &&
+        Array.isArray(calendar.modelValue) &&
+        calendar.modelValue.length >= 2
+      ) {
+        this.$store.commit('setDates', this.selectedDates)
+        calendar.overlayVisible = false
+      }
+    },
+
     search() {
-      if (this.destination) {
+      if (this.destination && this.selectedDates) {
         this.$router.push({
           name: 'FHotels',
           query: {
             city: this.destination,
-            checkin: this.checkInDate,
-            checkout: this.checkOutDate,
+            // checkin: this.checkInDate,
+            // checkout: this.checkOutDate,
           },
         })
       } else {

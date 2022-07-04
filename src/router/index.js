@@ -6,6 +6,7 @@ import store from '../store'
 import Dashboard from '../views/Dashboard.vue'
 import ForgotPassword from '../views/ForgotPassword.vue'
 import FHotels from '../views/front/Hotels.vue'
+import FSingleHotel from '../views/front/SingleHotel.vue'
 import Home from '../views/Home.vue'
 import Hotels from '../views/Hotels.vue'
 import Login from '../views/Login.vue'
@@ -29,6 +30,11 @@ const routes = [
         path: '/hotels',
         name: 'FHotels',
         component: FHotels,
+      },
+      {
+        path: '/hotels/:id',
+        name: 'FSingleHotel',
+        component: FSingleHotel,
       },
     ],
   },

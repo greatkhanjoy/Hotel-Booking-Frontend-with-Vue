@@ -1,9 +1,8 @@
-<!-- This example requires Tailwind CSS v2.0+ -->
 <template>
   <Popover class="relative bg-white">
     <div class="mx-auto">
       <div
-        class="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10 px-4 sm:px-6"
+        class="flex justify-between items-center border-b-2 border-gray-100 pt-10 pb-5 md:justify-start md:space-x-10 px-6 sm:px-6"
       >
         <div class="flex justify-start lg:w-0 lg:flex-1">
           <router-link :to="{ name: 'Home' }">
@@ -37,22 +36,10 @@
           >
             Hotels
           </router-link>
-          <a
-            href="#"
-            class="text-base font-medium text-gray-500 hover:text-gray-900"
-          >
-            Pricings
-          </a>
-          <a
-            href="#"
-            class="text-base font-medium text-gray-500 hover:text-gray-900"
-          >
-            Docs
-          </a>
         </PopoverGroup>
         <div
           class="hidden md:flex items-center justify-end md:flex-1 lg:w-0"
-          v-if="!store.getters.isLoggedIn"
+          v-if="!$store.getters.isLoggedIn"
         >
           <router-link
             :to="{ name: 'Login' }"
@@ -69,7 +56,7 @@
         </div>
         <div
           class="hidden md:flex items-center justify-end md:flex-1 lg:w-0"
-          v-if="store.getters.isLoggedIn"
+          v-if="$store.getters.isLoggedIn"
         >
           <router-link
             :to="{ name: 'Dashboard' }"
@@ -80,7 +67,7 @@
           <span
             class="ml-5 whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
           >
-            {{ store.getters.userName }}
+            {{ $store.getters.userName }}
           </span>
         </div>
       </div>
@@ -122,51 +109,9 @@
                 </PopoverButton>
               </div>
             </div>
-            <div class="mt-6">
-              <nav class="grid gap-y-8">
-                <a
-                  v-for="item in solutions"
-                  :key="item.name"
-                  :href="item.href"
-                  class="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50"
-                >
-                  <component
-                    :is="item.icon"
-                    class="flex-shrink-0 h-6 w-6 text-indigo-600"
-                    aria-hidden="true"
-                  />
-                  <span class="ml-3 text-base font-medium text-gray-900">
-                    {{ item.name }}
-                  </span>
-                </a>
-              </nav>
-            </div>
           </div>
           <div class="py-6 px-5 space-y-6">
-            <div class="grid grid-cols-2 gap-y-4 gap-x-8">
-              <a
-                href="#"
-                class="text-base font-medium text-gray-900 hover:text-gray-700"
-              >
-                Pricing
-              </a>
-
-              <a
-                href="#"
-                class="text-base font-medium text-gray-900 hover:text-gray-700"
-              >
-                Docs
-              </a>
-              <a
-                v-for="item in resources"
-                :key="item.name"
-                :href="item.href"
-                class="text-base font-medium text-gray-900 hover:text-gray-700"
-              >
-                {{ item.name }}
-              </a>
-            </div>
-            <div v-if="!store.getters.isLoggedIn">
+            <div v-if="!$store.getters.isLoggedIn">
               <router-link
                 :to="{ name: 'Register' }"
                 class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
@@ -184,7 +129,7 @@
                 </router-link>
               </p>
             </div>
-            <div v-if="store.getters.isLoggedIn">
+            <div v-if="$store.getters.isLoggedIn">
               <p class="mt-6 text-center text-base font-medium text-gray-500">
                 <router-link
                   :to="{ name: 'Dashboard' }"
@@ -199,105 +144,128 @@
       </PopoverPanel>
     </transition>
   </Popover>
+  <Dialog v-model:visible="this.$store.state.displaySignInModal" class="w-96">
+    <div>
+      <h3 class="text-center text-2xl">Sign In</h3>
+      <form class="mt-8 space-y-6" @submit.prevent="login()" method="POST">
+        <div class="rounded-md shadow-sm -space-y-px">
+          <div>
+            <label for="email-address" class="sr-only">Email address</label>
+            <input
+              v-model="user.email"
+              id="email-address"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required=""
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              placeholder="Email address"
+            />
+          </div>
+          <div>
+            <label for="password" class="sr-only">Password</label>
+            <input
+              v-model="user.password"
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required=""
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              placeholder="Password"
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input
+              id="remember-me"
+              name="remember-me"
+              type="checkbox"
+              class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            />
+            <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+              Remember me
+            </label>
+          </div>
+
+          <div class="text-sm">
+            <router-link
+              :to="{ name: 'ForgotPassword' }"
+              class="font-medium text-indigo-600 hover:text-indigo-500"
+            >
+              Forgot your password?
+            </router-link>
+          </div>
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+              <LockClosedIcon
+                class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
+                aria-hidden="true"
+              />
+            </span>
+            Sign in
+          </button>
+        </div>
+      </form>
+    </div>
+  </Dialog>
+  <Toast />
 </template>
 
-<script setup>
-import {
-  Popover,
-  PopoverButton,
-  PopoverGroup,
-  PopoverPanel,
-} from '@headlessui/vue'
-import {
-  BookmarkAltIcon,
-  CalendarIcon,
-  ChartBarIcon,
-  CursorClickIcon,
-  MenuIcon,
-  PhoneIcon,
-  PlayIcon,
-  RefreshIcon,
-  ShieldCheckIcon,
-  SupportIcon,
-  ViewGridIcon,
-  XIcon,
-} from '@heroicons/vue/outline'
-import store from '../store'
-
-const solutions = [
-  {
-    name: 'Analytics',
-    description:
-      'Get a better understanding of where your traffic is coming from.',
-    href: '#',
-    icon: ChartBarIcon,
+<script>
+import { MenuIcon, XIcon } from '@heroicons/vue/outline'
+import Dialog from 'primevue/dialog'
+import Toast from 'primevue/toast'
+export default {
+  components: {
+    Dialog,
+    MenuIcon,
+    XIcon,
+    Toast,
   },
-  {
-    name: 'Engagement',
-    description: 'Speak directly to your customers in a more meaningful way.',
-    href: '#',
-    icon: CursorClickIcon,
+  data() {
+    return {
+      display: false,
+      user: {
+        email: '',
+        password: '',
+      },
+    }
   },
-  {
-    name: 'Security',
-    description: "Your customers' data will be safe and secure.",
-    href: '#',
-    icon: ShieldCheckIcon,
+  methods: {
+    login() {
+      this.$store
+        .dispatch('login', {
+          email: this.user.email,
+          password: this.user.password,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Success Message',
+              detail: 'Successfuly Logged in!',
+              life: 3000,
+            })
+            this.$store.commit('setdisplaySignInModal', false)
+          } else {
+            this.$toast.add({
+              severity: 'error',
+              summary: 'Error Message',
+              detail: 'Login Failed!',
+              life: 3000,
+            })
+          }
+        })
+    },
   },
-  {
-    name: 'Integrations',
-    description: "Connect with third-party tools that you're already using.",
-    href: '#',
-    icon: ViewGridIcon,
-  },
-  {
-    name: 'Automations',
-    description:
-      'Build strategic funnels that will drive your customers to convert',
-    href: '#',
-    icon: RefreshIcon,
-  },
-]
-const callsToAction = [
-  { name: 'Watch Demo', href: '#', icon: PlayIcon },
-  { name: 'Contact Sales', href: '#', icon: PhoneIcon },
-]
-const resources = [
-  {
-    name: 'Help Center',
-    description:
-      'Get all of your questions answered in our forums or contact support.',
-    href: '#',
-    icon: SupportIcon,
-  },
-  {
-    name: 'Guides',
-    description:
-      'Learn how to maximize our platform to get the most out of it.',
-    href: '#',
-    icon: BookmarkAltIcon,
-  },
-  {
-    name: 'Events',
-    description:
-      'See what meet-ups and other events we might be planning near you.',
-    href: '#',
-    icon: CalendarIcon,
-  },
-  {
-    name: 'Security',
-    description: 'Understand how we take your privacy seriously.',
-    href: '#',
-    icon: ShieldCheckIcon,
-  },
-]
-const recentPosts = [
-  { id: 1, name: 'Boost your conversion rate', href: '#' },
-  {
-    id: 2,
-    name: 'How to use search engine optimization to drive traffic to your site',
-    href: '#',
-  },
-  { id: 3, name: 'Improve your customer experience', href: '#' },
-]
+}
 </script>
